@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="deferred.js"></script>
+
+        <script>
+            window.onload = function() {
+                 var oldConsole = window.console
+
+                window.console = {
+                    log: function(str) {
+                        if (oldConsole) {
+                            oldConsole.log(str)
+                        }
+                        var div = document.createElement("div")
+                        div.innerHTML = window.JSON ? JSON.stringify(str) : str;
+                        document.body.appendChild(div);
+                    }
+                }
+                function aaa() {
+                    var d = Deferred();
+                    setTimeout(function() {
+                        d.resolve(1000)
+                    }, 1000)
+                    return d.promise
+                }
+                aaa().ensure(function() {
+                    console.log("ensure")
+                    throw "ensure error"
+                }).otherwise(function(e) {
+                    console.log(e)
+                })
+            }
+
+        </script>
+    </head>
+    <body>
+        <div>TEST by 司徒正美</div>
+        <p> 在Deferred中，resolve相当于正常的call, apply语句， reject相当于throw语句，otherwise相当于catch 语句，ensure相当于finally语句  </p>
+    </body>
+</html>

@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="deferred.js"></script>
+        <script src="avalon.js"></script>
+        <script>
+            window.onload = function () {
+                var oldConsole = window.console
+
+                window.console = {
+                    log: function (str) {
+                        if (oldConsole) {
+                            oldConsole.log(str)
+                        }
+                        var div = document.createElement("div")
+                        div.innerHTML = window.JSON ? JSON.stringify(str) : str;
+                        document.body.appendChild(div);
+                    }
+                }
+
+
+                function aaa() {
+                    var dfd = Deferred()
+                    setTimeout(function () {
+                        dfd.reject("error")
+                    }, 1000)
+                    return dfd.promise
+                }
+                aaa().otherwise(function () {
+                    console.log("ng 000000000000")
+                }).then(function () {
+                    console.log("ok 111111111111")
+                }, function () {
+                    console.log("ng 111111111111")
+                }).then(function () {
+                    console.log("ok 22222222222")
+                    throw "throw"
+                }, function () {
+                    console.log("ng 222222222222")
+                }).then(function () {
+                    console.log("ok 33333333333")
+                }, function () {
+                    console.log("ng 33333333333")
+                })
+
+                require(["mmPromise"], function () {
+                    new avalon.Promise(function (resolve, reject) {
+                        reject(1000)
+                    })["catch"](function (a) {
+                        console.log("then ng 0  " + a)
+                    }).then(function () {
+                        console.log("then ok 1")
+                    }, function () {
+                        console.log("then ng 1")
+                    }).then(function () {
+                        console.log("then ok 2")
+                        throw "throw"
+                    }, function () {
+                        console.log("then ng 2")
+                    }).then(function () {
+                        console.log("then ok 3")
+                    }, function () {
+                        console.log("then ng 3")
+                    })
+                })
+
+            }
+
+        </script>
+    </head>
+    <body>
+        <div>TEST by 司徒正美</div>
+    </body>
+</html>

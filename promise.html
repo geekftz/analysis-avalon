@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="avalon.js">
+
+        </script>
+        <script>
+            require(["mmPromise"], function(promise) {
+
+                var d = promise.defer()
+                d.promise.then(function(a){
+                    avalon.log(a + 333)
+                })
+                
+                d.resolve(111)
+                avalon.log("这里会先执行")
+            })
+        </script>
+    </head>
+    <body>
+        <pre>
+       The full list of nonstandard methods:
+
+- Promise.defer
+- Promise.accept
+- Promise.prototype.chain
+        </pre>
+    </body>
+</html>

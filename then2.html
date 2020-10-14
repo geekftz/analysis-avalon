@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="newPromise.js"></script>
+
+        <script>
+            window.onload = function () {
+                var oldConsole = window.console
+
+                window.console = {
+                    log: function (str) {
+                        if (oldConsole) {
+                            oldConsole.log(str)
+                        }
+                        var div = document.createElement("div")
+                        div.innerHTML = str;
+                        document.body.appendChild(div);
+                    }
+                }
+
+                new Promise(function (resolve) {
+                    setTimeout(function () {
+                        resolve(1000)
+                    }, 1000)
+                }).then(function (a) {
+                    console.log(a + "resolve 1")
+                    return a + 10
+                }, function (e) {
+                    console.log(e + "reject 1")
+                    return e
+                }).then(function (a) {
+                    console.log(a + "resolve 2")
+                    return a + 2
+                }).then(function (a) {
+                    console.log(a + "resolve 3")
+                    return a + 5
+                }).then(function (a) {
+                    return new Promise(function (resolve) {
+                        setTimeout(function () {
+                            console.log("setTimeout")
+                            resolve(a + 100)
+                        }, 2000);
+                    })
+                }).then(function (a) {
+                    console.log(a + "delay2000")
+                })
+
+            }
+
+        </script>
+    </head>
+    <body>
+        <div>TEST by 司徒正美</div>
+    </body>
+</html>

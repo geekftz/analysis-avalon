@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="deferred.js"></script>
+
+        <script>
+            window.onload = function() {
+                var oldConsole = window.console
+
+                window.console = {
+                    log: function(str) {
+                        if (oldConsole) {
+                            oldConsole.log(str)
+                        }
+                        var div = document.createElement("div")
+                        div.innerHTML = window.JSON ? JSON.stringify(str) : str;
+                        document.body.appendChild(div);
+                    }
+                }
+
+
+                function startNotify() {
+                    var dfd = Deferred(), count = 0;
+                    var intervalId = setInterval(function() {
+                        dfd.notify(count++);
+                        count > 10 && clearInterval(intervalId);
+                    }, 500);
+
+                    return dfd.promise;
+                }
+                startNotify().then(function(a) {
+                    console.log(a + " resolve 0");
+                    return 10
+                }, function(a) {
+                    console.log(a + " reject 0")
+                }, function(a) {
+                    console.log(a + " notify  0")
+                    return "N"
+                }).then(function(a) {
+                    console.log(a + " resolve 1");
+                }, function(a) {
+                    console.log(a + " reject 1")
+                }, function(a) {
+                    console.log(a + " notify  1")
+                })
+            }
+
+        </script>
+    </head>
+    <body>
+        <div>TEST by 司徒正美</div>
+    </body>
+</html>

@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="deferred.js"></script>
+
+        <script>
+            window.onload = function() {
+                var oldConsole = window.console
+
+                window.console = {
+                    log: function(str) {
+                        if (oldConsole) {
+                            oldConsole.log(str)
+                        }
+                        var div = document.createElement("div")
+                        div.innerHTML = window.JSON ? JSON.stringify(str) : str;
+                        document.body.appendChild(div);
+                    }
+                }
+
+                function aaa() {
+                    var d = Deferred();
+                    setTimeout(function() {
+                        d.resolve(1000)
+                    }, 1000)
+                    return d.promise
+                }
+                function bbb() {
+                    var d = Deferred();
+                    setTimeout(function() {
+                        d.resolve(2000)
+                    }, 2000)
+                    return d.promise
+                }
+                function ccc() {
+                    var d = Deferred();
+                    setTimeout(function() {
+                        d.resolve(500)
+                    }, 500)
+                    return d.promise
+                }
+
+                  //只收集最先到达的那个
+                Deferred.any(aaa(), bbb(), ccc()).then(function(a) {
+                    console.log(a)
+                })
+
+            }
+
+        </script>
+    </head>
+    <body>
+        <div>TEST by 司徒正美</div>
+
+    </body>
+</html>

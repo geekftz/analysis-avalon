@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="avalon.js"></script>
+
+        <script>
+            window.onload = function () {
+                var oldConsole = window.console
+                window.console = {
+                    log: function (str) {
+                        if (oldConsole) {
+                            oldConsole.log(str)
+                        }
+                        var div = document.createElement("div")
+                        div.innerHTML = window.JSON ? JSON.stringify(str) : str;
+                        document.body.appendChild(div);
+                    }
+                }
+
+                require(["mmPromise"], function () {
+                    var p = new avalon.Promise(function (resolve, reject) {
+                        reject(1000)
+                    })
+                    console.log(p._state + "  ; 应该输出rejected")
+                    p.then(function (a) {
+                       console.log("这里不应该输出")
+                    }, function (e) {
+                        console.log((this == window) + " ; 应该返回true,等于window")
+                        console.log(e + " ; 应该返回1000")
+                    })
+                })
+
+            }
+
+        </script>
+    </head>
+    <body>
+        <div>TEST by 司徒正美</div>
+    </body>
+</html>

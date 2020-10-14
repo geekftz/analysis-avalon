@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="deferred.js"></script>
+        <script src="avalon.js"></script>
+        <script>
+            window.onload = function () {
+                var oldConsole = window.console
+
+                window.console = {
+                    log: function (str) {
+                        if (oldConsole) {
+                            oldConsole.log(str)
+                        }
+                        var div = document.createElement("div")
+                        div.innerHTML = str;
+                        document.body.appendChild(div);
+                    }
+                }
+
+
+                function aaa() {
+                    var d = Deferred();
+                    setTimeout(function () {
+                        d.resolve(1000)
+                    }, 1000)
+                    return d.promise
+                }
+
+
+                aaa().then(function (a) {
+                    console.log(a + "::resolve 1")
+                    throw "error!"
+                    return a + 10
+                }, function (e) {
+                    console.log(e + "::reject 1")
+                    return e
+                }).otherwise(function (e) {
+                    console.log(e + "::otherwise")
+                })
+
+                require(["mmPromise"], function () {
+                    new avalon.Promise(function (resolve, reject) {
+                        resolve(1000)
+                    }).then(function (a) {
+                        console.log(a + "; resolve 1")
+                        throw "error!"
+                        return a + 10
+                    }, function (e) {
+                        console.log(e + "; reject 1")
+                        return e
+                    })["catch"](function (e) {
+                        console.log(e + "; otherwise")
+                    })
+                })
+
+            }
+
+        </script>
+    </head>
+    <body>
+        <div>TEST by 司徒正美</div>
+    </body>
+</html>
